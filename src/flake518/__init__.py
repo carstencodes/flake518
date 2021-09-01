@@ -28,6 +28,4 @@
 from .adapter import run as run_flake518
 
 
-__all__ = [
-        'run_flake518'
-    ]
+__all__ = ["run_flake518"]

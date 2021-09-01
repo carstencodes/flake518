@@ -156,9 +156,33 @@ def read_pyproject_toml(py_project_toml: Path) -> dict:
 
     # Captions have been lost after merging. Add generic flake8 section
     if len(result) > 0:
-        result = {'flake8': result}
+        result = {"flake8": result}
 
     return result
+
+
+def update_configuration(config: dict) -> None:
+    """Update configuration to match a correct ini file format.
+
+    Args:
+        config (dict): The configuration to modify
+    """
+    for _, scoped_config in config.items():
+        if not isinstance(scoped_config, dict):
+            raise ValueError(
+                "Second level configuration element must be a dictionary"
+            )
+
+        for key, value in scoped_config.items():
+            if isinstance(value, dict):
+                raise ValueError("Cannot nest dictionary in ini-file")
+            if isinstance(value, list):
+                logger.debug(
+                    "Changing a configuration value from list to str: %s",
+                    value,
+                )
+                value = ", ".join(value)
+                scoped_config[key] = value
 
 
 def write_config_to_ini(config: dict, ini: TextIO) -> None:
@@ -197,8 +221,9 @@ def run(argv: Optional[_List[str]] = None) -> None:
             "Found entries in %s. Adding additional configuration...",
             py_project,
         )
+        update_configuration(config)
         with NamedTemporaryFile(
-                "w+t", prefix="flake518_", suffix=".cfg", delete=True
+            "w+t", prefix="flake518_", suffix=".cfg", delete=True
         ) as handle:
             write_config_to_ini(config, handle)
             logger.debug(
@@ -207,8 +232,8 @@ def run(argv: Optional[_List[str]] = None) -> None:
                 handle.name,
             )
             handle.flush()
-            args.append('--config')
-            args.append('{}'.format(handle.name))
+            args.append("--config")
+            args.append("{}".format(handle.name))
             logger.debug("The following arguments are applied now: %s", args)
             run_flake8(args)
 
