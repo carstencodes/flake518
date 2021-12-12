@@ -223,7 +223,7 @@ def run(argv: Optional[_List[str]] = None) -> None:
         )
         update_configuration(config)
         with NamedTemporaryFile(
-            "w+t", prefix="flake518_", suffix=".cfg", delete=True
+            "x+t", prefix=".flake518_", suffix=".cfg", delete=True, dir=py_project.parent
         ) as handle:
             write_config_to_ini(config, handle)
             logger.debug(
