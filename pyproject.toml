@@ -66,4 +66,4 @@ statistics=true
 show-source=true
 max-line-length=79
 doctests=true
-# exclude=[".git", "__pypackages__", ".vscode", ".mypy_cache"]
+exclude=[".git", "__pypackages__", ".vscode", ".mypy_cache"]
