@@ -3,3 +3,4 @@ dist
 __pycache__
 __pypackages__
 src/flake518.egg-info/
+.flake518_*.cfg
