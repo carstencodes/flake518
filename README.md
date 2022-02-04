@@ -7,7 +7,7 @@ compliant `pyproject.toml`.
 In contrast to [flake9](https://gitlab.com/retnikt/flake9) it is not a fork of flake8. It uses flake8 under the hood and transforms
 the relevant configuration to a flake8 configuration file. This way, the ongoing implementation of flake8 can be used.
 
-## Rational
+## Rationale
 
 The usage of `pyproject.toml` is though highly anticipated by some community members, but currently [rejected](https://github.com/PyCQA/flake8/issues/234) by the maintainers for an undisclosed reason. Flake9 already uses the `pyproject.toml` file, but does not incorporate later changes.
 
