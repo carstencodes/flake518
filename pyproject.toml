@@ -1,6 +1,6 @@
 [project]
 name = "flake518"
-version = "1.2.1"
+version = "1.2.2"
 description = "A small wrapper around flake8 to support PEP518 pyproject.toml as configuration file."
 authors = [
     {name = "Carsten Igel", email = "cig@bite-that-bit.de"},
