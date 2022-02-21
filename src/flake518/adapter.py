@@ -67,7 +67,7 @@ def _get_os_var_value(var_name: str) -> bool:
     var_value: Optional[str] = os.getenv(var_name)
 
     if var_value is not None:
-        return bool(flake518_dbg_env)
+        return bool(var_value)
     
     return False
 
