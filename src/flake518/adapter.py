@@ -52,6 +52,25 @@ PY_PROJECT_TOML = "pyproject.toml"
 TOOL = "tool"
 FLAKE_SECTIONS = ("flake8", "flake518")
 
+def _get_os_var_value(var_name: str) -> bool:
+    """
+        Gets a boolean value describing whether a 
+        OS environment variable is set to a value
+        equals to 'True' or not.
+        
+        Args:
+           var_name (str): The name of the environment variable.
+        
+        Returns:
+           bool: True, if the variable is set and equals True; False otherwise.
+    """
+    var_value: Optional[str] = os.getenv(var_name)
+
+    if var_value is not None:
+        return bool(flake518_dbg_env)
+    
+    return False
+
 
 def _get_log_level() -> int:
     """Get the log level (INFO or DEBUG).
@@ -64,11 +83,7 @@ def _get_log_level() -> int:
     """
     result: int = logging.INFO
 
-    flake518_dbg: bool = False
-    flake518_dbg_env: Optional[str] = os.getenv("FLAKE518_DEBUG")
-
-    if flake518_dbg_env is not None:
-        flake518_dbg = bool(flake518_dbg_env)
+    flake518_dbg: bool = _get_os_var_value("FLAKE518_DEBUG")
 
     if flake518_dbg:
         result = logging.DEBUG
@@ -216,14 +231,22 @@ def run(argv: Optional[_List[str]] = None) -> None:
     if py_project is not None:
         config = read_pyproject_toml(py_project)
 
+    keep_file = _get_os_var_value("FLAKE518_KEEPFILE")
+    
+    if _get_os_var_value("FLAKE518_BLATHER"):
+        args.append("-vv")
+    elif _get_os_var_value("FLAKE518_VERBOSE"):
+        args.append("-v")
+        
     if (len(config)) > 0:
         logger.debug(
             "Found entries in %s. Adding additional configuration...",
             py_project,
         )
         update_configuration(config)
+        delete_file = not keep_file
         with NamedTemporaryFile(
-            "x+t", prefix=".flake518_", suffix=".cfg", delete=True, dir=py_project.parent
+            "x+t", prefix=".flake518_", suffix=".cfg", delete=delete_file, dir=py_project.parent
         ) as handle:
             write_config_to_ini(config, handle)
             logger.debug(
