@@ -6,17 +6,6 @@ on:
       - 'v*'
 
 jobs:
-  changelog:
-    name: Generate changelog
-    runs-on: ubuntu-latest
-    outputs:
-      changelog: ${{ steps.changelog.outputs.changelog }}
-    steps:
-      - name: Generate changelog
-        id: changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.1.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
   deploy:
     name: Deploy wheel to pypi
     runs-on: ubuntu-latest
@@ -43,13 +32,28 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [ changelog, deploy ]
+    needs: [ deploy ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Get tag name
         uses: battila7/get-version-action@v2
         id: tag_name
+      - name: Generate changelog
+        id: changelog
+        run: |
+          chl_file=".changelogs/${{steps.tag_name.outputs.version}}.md"
+          if [ -f "${chl_file}" ]
+          then
+            message=$(cat "${chl_file}")
+            message="${message//'%'/'%25'}"
+            message="${message//$'\n'/'%0A'}"
+            message="${message//$'\r'/'%0D'}"
+          else
+            changelog="No changelog provided"
+          fi
+
+          echo ::set-output name=changelog::${changelog}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -60,6 +64,6 @@ jobs:
         with:
           tag_name: ${{ steps.tag_name.outputs.version }}
           release_name: Release ${{ steps.tag_name.outputs.version }}
-          body: ${{ needs.changelog.outputs.changelog }}
+          body: ${{ steps.changelog.outputs.changelog }}
           draft: false
           prerelease: ${{ (startsWith(steps.tag_name.outputs.version, 'v0')) || (endsWith(steps.tag_name.outputs.version, '-pre')) || (endsWith(steps.tag_name.outputs.version, '-dev')) }}
