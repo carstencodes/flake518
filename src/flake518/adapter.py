@@ -237,6 +237,8 @@ def run(argv: Optional[_List[str]] = None) -> None:
         args.append("-vv")
     elif _get_os_var_value("FLAKE518_VERBOSE"):
         args.append("-v")
+    
+    config_file: Optional[Path] = None
         
     if (len(config)) > 0:
         logger.debug(
@@ -244,9 +246,8 @@ def run(argv: Optional[_List[str]] = None) -> None:
             py_project,
         )
         update_configuration(config)
-        delete_file = not keep_file
         with NamedTemporaryFile(
-            "x+t", prefix=".flake518_", suffix=".cfg", delete=delete_file, dir=py_project.parent
+            "x+t", prefix=".flake518_", suffix=".cfg", delete=False, dir=py_project.parent
         ) as handle:
             write_config_to_ini(config, handle)
             logger.debug(
@@ -258,8 +259,19 @@ def run(argv: Optional[_List[str]] = None) -> None:
             args.append("--config")
             args.append("{}".format(handle.name))
             logger.debug("The following arguments are applied now: %s", args)
-            run_flake8(args)
-
+            config_file = Path(handle.name)
     else:
         logger.debug("Running flake8 without modified configuration")
+    
+    try:
         run_flake8(args)
+    except SystemExit:
+        if not keep_file and \
+                (config_file is not None and config_file.exists() and config_file.is_file()):
+            config_file.unlink()
+        raise
+    else:
+        if not keep_file and \
+                (config_file is not None and config_file.exists() and config_file.is_file()):
+            config_file.unlink()
+            
