@@ -1,0 +1,7 @@
+-   id: flake518
+    name: flake518
+    description: '`flake518` is a small wrapper around `flake8` to read the configuration from the PEP518 compliant `pyproject.toml`.'
+    entry: flake518
+    language: python
+    types: [python]
+    require_serial: true

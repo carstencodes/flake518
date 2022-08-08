@@ -28,6 +28,20 @@ exclude=[".git", "__pypackages__", ".vscode", ".mypy_cache"]
 
 For compliance reason, the `[tool.flake518]` can be used as well.
 
+## Usage with the `pre-commit` git hooks framework
+
+`flake518` can be included as a hook for [`pre-commit`](https://pre-commit.com/).
+The easiest way to get started is to add this configuration to your `.pre-commit-config.yaml`:
+
+```yaml
+    -   repo: https://github.com/carstencodes/flake518
+        rev: ''  # pick a git hash / tag to point to
+        hooks:
+        -   id: flake518
+```
+
+See the [`pre-commit`](https://pre-commit.com/#pre-commit-configyaml---hooks) for how to customize this configuration. 
+
 ## License
 
 Like flake8, this project is licensed under the MIT license.
