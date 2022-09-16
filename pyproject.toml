@@ -27,8 +27,8 @@ dependencies = [
     "flake8~=3.9",
 ]
 requires-python = ">=3.6, <4"
-license = {text = "MIT", file="LICENSE"}
-keywords = ""
+license = {file="LICENSE"}
+keywords = [] 
 readme = "README.md"
 
 [project.scripts]
