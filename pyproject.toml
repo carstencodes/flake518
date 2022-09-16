@@ -51,8 +51,8 @@ edit = [
     "mypy~=0.910",
     "black~=20.8b1"]
 lint = [
-    "pylint~=2.9",
-    "pydocstyle~=6.1",
+release = [
+    "pdm-bump>=0.5.0",
 ]
 
 [tool.black]
