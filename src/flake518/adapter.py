@@ -39,7 +39,11 @@ from tempfile import NamedTemporaryFile
 from typing import Optional, TextIO
 
 from flake8.main.cli import main as run_flake8
-from toml import load as load_toml
+
+if sys.version_info >= (3, 11):
+    from tomllib import load as load_toml
+else:
+    from tomli import load as load_toml
 
 # Python 3.9 enforces list over List
 # In this order, the linter will get it straight
@@ -148,7 +152,8 @@ def read_pyproject_toml(py_project_toml: Path) -> dict:
         return result
 
     logger.debug("Reading %s", py_project_toml)
-    toml_content: dict = load_toml(py_project_toml)
+    with py_project_toml.open('rb') as f:
+        toml_content: dict = load_toml(f)
     if TOOL in toml_content.keys():
         logger.debug("Found '%s' section in %s", TOOL, py_project_toml)
         tool_content: dict = toml_content[TOOL]

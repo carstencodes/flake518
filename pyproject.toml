@@ -21,7 +21,7 @@ classifiers = [
         "Typing :: Typed",
 ]
 dependencies = [
-    "toml>=0.10.2",
+    "tomli>=0.10.2; python_version<'3.11'",
     "flake8>=3.0.0",
 ]
 requires-python = ">=3.9, <4"
