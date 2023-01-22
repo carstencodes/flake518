@@ -58,13 +58,13 @@ FLAKE_SECTIONS = ("flake8", "flake518")
 
 def _get_os_var_value(var_name: str) -> bool:
     """
-        Gets a boolean value describing whether a 
+        Gets a boolean value describing whether a
         OS environment variable is set to a value
         equals to 'True' or not.
-        
+
         Args:
            var_name (str): The name of the environment variable.
-        
+
         Returns:
            bool: True, if the variable is set and equals True; False otherwise.
     """
@@ -72,7 +72,7 @@ def _get_os_var_value(var_name: str) -> bool:
 
     if var_value is not None:
         return bool(var_value)
-    
+
     return False
 
 
@@ -237,14 +237,14 @@ def run(argv: Optional[_List[str]] = None) -> None:
         config = read_pyproject_toml(py_project)
 
     keep_file = _get_os_var_value("FLAKE518_KEEPFILE")
-    
+
     if _get_os_var_value("FLAKE518_BLATHER"):
         args.append("-vv")
     elif _get_os_var_value("FLAKE518_VERBOSE"):
         args.append("-v")
-    
+
     config_file: Optional[Path] = None
-        
+
     if (len(config)) > 0:
         logger.debug(
             "Found entries in %s. Adding additional configuration...",
@@ -267,7 +267,7 @@ def run(argv: Optional[_List[str]] = None) -> None:
             config_file = Path(handle.name)
     else:
         logger.debug("Running flake8 without modified configuration")
-    
+
     ret = run_flake8(args)
     if not keep_file and (config_file is not None and config_file.exists()
                           and config_file.is_file()):
