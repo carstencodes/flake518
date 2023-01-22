@@ -268,15 +268,8 @@ def run(argv: Optional[_List[str]] = None) -> None:
     else:
         logger.debug("Running flake8 without modified configuration")
     
-    try:
-        run_flake8(args)
-    except SystemExit:
-        if not keep_file and \
-                (config_file is not None and config_file.exists() and config_file.is_file()):
-            config_file.unlink()
-        raise
-    else:
-        if not keep_file and \
-                (config_file is not None and config_file.exists() and config_file.is_file()):
-            config_file.unlink()
-            
+    ret = run_flake8(args)
+    if not keep_file and (config_file is not None and config_file.exists()
+                          and config_file.is_file()):
+        config_file.unlink()
+    raise SystemExit(ret)
