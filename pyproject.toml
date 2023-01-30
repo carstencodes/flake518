@@ -1,6 +1,6 @@
 [project]
 name = "flake518"
-version = "1.4.0"
+version = "1.5.0"
 description = "A small wrapper around flake8 to support PEP518 pyproject.toml as configuration file."
 authors = [
     {name = "Carsten Igel", email = "cig@bite-that-bit.de"},
@@ -57,7 +57,7 @@ lint = [
     "pydocstyle>=6.1.1",
 ]
 release = [
-    "pdm-bump>=0.5.0",
+       "pdm-bump>=0.5.0",
 ]
 
 [tool.black]
