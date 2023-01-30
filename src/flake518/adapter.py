@@ -56,6 +56,7 @@ PY_PROJECT_TOML = "pyproject.toml"
 TOOL = "tool"
 FLAKE_SECTIONS = ("flake8", "flake518")
 
+
 def _get_os_var_value(var_name: str) -> bool:
     """
         Gets a boolean value describing whether a
