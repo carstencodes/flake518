@@ -103,7 +103,7 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 def get_pyproject_toml() -> Optional[Path]:
-    """Find the 'pytproject.toml' file.
+    """Find the 'pyproject.toml' file.
 
     Starts in the current directory and attempts to find the
     the 'pyproject.toml' file in this directory or any parent
@@ -117,7 +117,7 @@ def get_pyproject_toml() -> Optional[Path]:
     cur_dir = os.path.realpath(cur_dir)
 
     parent, tail = (cur_dir, cur_dir)
-    while tail is not None and not len(tail) == 0:
+    while tail is not None and len(tail) != 0:
         logger.debug("Searching for '%s' in %s", PY_PROJECT_TOML, parent)
         py_project_toml_path = os.path.join(parent, PY_PROJECT_TOML)
 
@@ -153,8 +153,8 @@ def read_pyproject_toml(py_project_toml: Path) -> dict:
         return result
 
     logger.debug("Reading %s", py_project_toml)
-    with py_project_toml.open('rb') as f:
-        toml_content: dict = load_toml(f)
+    with py_project_toml.open('rb') as file_ptr:
+        toml_content: dict = load_toml(file_ptr)
     if TOOL in toml_content.keys():
         logger.debug("Found '%s' section in %s", TOOL, py_project_toml)
         tool_content: dict = toml_content[TOOL]
@@ -211,7 +211,7 @@ def write_config_to_ini(config: dict, ini: TextIO) -> None:
 
     Args:
         config (dict): The configuration to write.
-        ini (TextIO): The targetting file pointer.
+        ini (TextIO): The targeting file pointer.
     """
     config_writer: RawConfigParser = RawConfigParser("")
     logger.debug("The following configuration is written: %s", config)
@@ -253,7 +253,11 @@ def run(argv: Optional[_List[str]] = None) -> None:
         )
         update_configuration(config)
         with NamedTemporaryFile(
-            "x+t", prefix=".flake518_", suffix=".cfg", delete=False, dir=py_project.parent
+            "x+t",
+            prefix=".flake518_",
+            suffix=".cfg",
+            delete=False,
+            dir=py_project.parent
         ) as handle:
             write_config_to_ini(config, handle)
             logger.debug(
@@ -263,7 +267,7 @@ def run(argv: Optional[_List[str]] = None) -> None:
             )
             handle.flush()
             args.append("--config")
-            args.append("{}".format(handle.name))
+            args.append(f"{handle.name}")
             logger.debug("The following arguments are applied now: %s", args)
             config_file = Path(handle.name)
     else:
