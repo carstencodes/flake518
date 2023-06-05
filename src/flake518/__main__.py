@@ -31,3 +31,7 @@ from .adapter import run
 def main():
     """Entry point for the script to call."""
     run()
+
+
+if __name__ == "__main__":
+    main()
