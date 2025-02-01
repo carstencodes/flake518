@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
@@ -35,7 +35,7 @@ jobs:
     needs: [ deploy ]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Get tag name
         uses: battila7/get-version-action@v2
         id: tag_name
